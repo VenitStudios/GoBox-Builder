@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://ddvdy04pber10"]
+
+[ext_resource type="Shader" path="res://Shaders/PostProcessBorder.gdshader" id="1_7byt6"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_7byt6")
+shader_parameter/normal_threshold = 0.1
+shader_parameter/depth_threshold = 0.05
+shader_parameter/depth_artifact_correction_coef = 2.0
+shader_parameter/outline_color = Color(0, 0, 0, 1)

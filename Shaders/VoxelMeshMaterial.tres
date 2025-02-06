@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dbnt1xyoprojc"]
+
+[ext_resource type="Material" uid="uid://ddvdy04pber10" path="res://Shaders/PostProcessBorder.tres" id="1_ghlaw"]
+
+[resource]
+next_pass = ExtResource("1_ghlaw")
+shading_mode = 2
+vertex_color_use_as_albedo = true
