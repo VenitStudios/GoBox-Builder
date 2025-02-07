@@ -339,7 +339,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7k3ev")
 [node name="FileOptions" type="OptionButton" parent="UI"]
 unique_name_in_owner = true
 layout_mode = 2
-anchor_right = 0.111111
+anchor_right = 0.0555556
 anchor_bottom = 0.0493827
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("4_km3a8")
@@ -356,7 +356,8 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_wv5ij")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_wv5ij")
 theme_override_styles/normal = SubResource("StyleBoxFlat_wv5ij")
 selected = 0
-item_count = 5
+fit_to_longest_item = false
+item_count = 6
 popup/item_0/text = "File"
 popup/item_0/disabled = true
 popup/item_1/text = "New"
@@ -367,6 +368,8 @@ popup/item_3/text = "Save As"
 popup/item_3/id = 3
 popup/item_4/text = "Load"
 popup/item_4/id = 4
+popup/item_5/text = "Export glTF"
+popup/item_5/id = 5
 metadata/_edit_use_anchors_ = true
 
 [node name="ProjectSaveDialog" type="FileDialog" parent="."]
@@ -389,6 +392,16 @@ dialog_hide_on_ok = true
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.gbp")
+
+[node name="ProjectExportDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+position = Vector2i(0, 36)
+size = Vector2i(1144, 606)
+ok_button_text = "Save"
+dialog_hide_on_ok = true
+access = 2
+filters = PackedStringArray("*.glb")
 
 [connection signal="gui_input" from="UI/ZoomMeter" to="." method="zoom_meter_gui_input"]
 [connection signal="pressed" from="UI/ControlPanel/CreateNewColor" to="UI/ControlPanel/ColorPanel/ScrollContainer/ColorGrid" method="_on_button_pressed"]

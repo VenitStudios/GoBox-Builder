@@ -34,6 +34,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_key_pressed(KEY_O) or Input.is_key_pressed(KEY_F):
 		%Camera.position.x = 0
 		%CameraMount.position.y = 0
+	
+	if Input.is_action_just_pressed("RightClick"):
+		if mouse_collision_collider && model:
+			var pos = floor(mouse_collision_point - mouse_collision_normal * 0.5)
+			model.create_voxel(pos, current_color, VoxelModel.FLAGS.DELETE)
+	if Input.is_action_just_pressed("LeftClick"):
+		if mouse_collision_collider && model:
+			var pos = floor(mouse_collision_point - mouse_collision_normal * 0.5) + mouse_collision_normal
+			model.create_voxel(pos, current_color, VoxelModel.FLAGS.SOLID)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -41,7 +50,6 @@ func _input(event: InputEvent) -> void:
 		mouse_collision_point = cast_data.RayPoint
 		mouse_collision_normal = cast_data.RayNormal
 		mouse_collision_collider = cast_data.RayCollider
-
 
 func _process(delta: float) -> void:
 	camera_zoom_vel = snappedf(clamp(camera_zoom_vel / 16, -2, 2), 0.1)
@@ -63,14 +71,7 @@ func _process(delta: float) -> void:
 	
 	get_window().title = project_name.capitalize() + " - GoBox Editor"
 	
-	if Input.is_action_just_pressed("RightClick"):
-		if mouse_collision_collider && model:
-			var pos = floor(mouse_collision_point - mouse_collision_normal * 0.5)
-			model.create_voxel(pos, current_color, VoxelModel.FLAGS.DELETE)
-	if Input.is_action_just_pressed("LeftClick"):
-		if mouse_collision_collider && model:
-			var pos = floor(mouse_collision_point - mouse_collision_normal * 0.5) + mouse_collision_normal
-			model.create_voxel(pos, current_color, VoxelModel.FLAGS.SOLID)
+
 	if mouse_collision_collider && model:
 		var pos = floor(mouse_collision_point - mouse_collision_normal * 0.5) + mouse_collision_normal + (Vector3.ONE * 0.5)
 		%CursorHighlight.global_position = pos
@@ -117,6 +118,7 @@ func file_options_item_selected(index: int) -> void:
 		"Save": QuickSave()
 		"Save As": SaveProject()
 		"Load": LoadProject()
+		"Export glTF": SaveGLTF()
 	%FileOptions.selected = 0
 
 func SaveProject():
@@ -137,7 +139,6 @@ func SaveToFile(name_from_file_path, absolute_path):
 		fs.close()
 		%ProjectSaveDialog.current_file = ""
 		is_new_project = false
-
 
 func QuickSave():
 	if not is_new_project: SaveToFile(project_name, project_path)
@@ -179,3 +180,14 @@ func LoadProject():
 	is_new_project = false
 	project_name = file_data.project_name
 	project_path = absolute_path
+
+func SaveGLTF():
+	%ProjectExportDialog.show()
+	%ProjectExportDialog.current_dir = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "/GoBox Builder/"
+	var path = await %ProjectExportDialog.file_selected
+	
+	var gltf_document := GLTFDocument.new()
+	var gltf_state := GLTFState.new()
+	gltf_document.append_from_scene(model, gltf_state)
+	
+	gltf_document.write_to_filesystem(gltf_state, path)
